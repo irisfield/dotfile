@@ -1,0 +1,30 @@
+#!/bin/zsh
+
+# This file is intended to set commands that should be automatically executed every session.
+
+# Source the generated LS_COLORS
+[[ -f "$XDG_CONFIG_HOME/ls/ls_colors" ]] && source "$XDG_CONFIG_HOME/ls/ls_colors"
+
+# Source fzf completions and key bindings (ctrl-t, ctrl-r, alt-c).
+for comp in /usr/share/fzf/*.zsh; do
+    [[ -f "$comp" ]] && source "$comp"
+done
+
+# allows lf to change directory on quit
+lfcd () {
+  tmp="$(mktemp)"
+  lfub -last-dir-path="$tmp" "$@"
+  if [ -f "$tmp" ]; then
+    dir="$(command cat "$tmp")"
+    rm -f "$tmp" >/dev/null
+    [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+  fi
+}
+# bind lf to <c-o>
+bindkey -s '^o' '^ulf\n' # '^u' clears the line
+
+# https://image2ascii.com/
+
+# Lines below an exec command are ignored. exec is necessary because without it any user could kill X.
+# However, to remain logged in after ending the X session, startx without calling exec.
+[[ -z "$DISPLAY" ]] && exec startx

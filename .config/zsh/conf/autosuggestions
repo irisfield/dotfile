@@ -1,0 +1,6 @@
+#!/bin/sh
+# Refer to (https://github.com/zsh-users/zsh-autosuggestions).
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#818384'
+#ZSH_AUTOSUGGEST_HISTORY_IGNORE='?(#c80,)' # never make suggestions 80 characters or longer
+#bindkey '^M' autosuggest-execute # ctrl + enter to accept and execute the current suggestion

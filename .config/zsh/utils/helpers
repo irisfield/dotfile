@@ -1,0 +1,49 @@
+#!/bin/zsh
+
+# A list of helper shell functions to install and update zsh plugins.
+# zsh plugins are usually just git repositories, hence the use of git.
+# Reference: (https://github.com/ChristianChiarulli/Machfiles/tree/master/zsh/.config/zsh)
+
+# Starting the name of a function with an underscore changes the scope of the function.
+function _source_plugin() {
+  local PLUGINS_DIR="$XDG_DATA_HOME/zsh/plugins"
+  if [[ -f "$PLUGINS_DIR/$1/$1.plugin.zsh" ]] || [[ -f "$PLUGINS_DIR/$1/$1.zsh" ]]; then
+    source "$PLUGINS_DIR/$1/$1.plugin.zsh" || source "$PLUGINS_DIR/$1/$1.zsh"
+  fi
+}
+
+function zsh_add_plugin() {
+  local PLUGIN_NAME="${1##*/}"
+  if [[ -d "$XDG_DATA_HOME/zsh/plugins/$PLUGIN_NAME" ]]; then 
+    _source_plugin "$PLUGIN_NAME"
+  else
+    git clone "https://github.com/$1.git" "$XDG_DATA_HOME/zsh/plugins/$PLUGIN_NAME"
+  fi
+}
+
+function zsh_add_completion() {
+  local PLUGIN_NAME="${1##*/}"
+  if [[ -d "$XDG_DATA_HOME/zsh/plugins/$PLUGIN_NAME" ]]; then 
+    # For completions
+		local completion_file_path=$(ls "$XDG_DATA_HOME/zsh/plugins/$PLUGIN_NAME"/_*)
+		fpath+="$(dirname "${completion_file_path}")"
+    _source_plugin "$PLUGIN_NAME"
+  else
+    git clone "https://github.com/$1.git" "$XDG_DATA_HOME/zsh/plugins/$PLUGIN_NAME"
+		  fpath+=$(ls "$XDG_DATA_HOME/zsh/plugins/$PLUGIN_NAME"/_*)
+    [[ -f "$XDG_DATA_HOME/zsh/zcompdump" ]] && "$XDG_DATA_HOME/zsh/zcompdump"
+  fi
+	  local completion_file="$(basename "${completion_file_path}")"
+	  [[ "$2" == true ]] && compinit "${completion_file#?}" # remove the first character with #?
+  # See (https://github.com/dylanaraps/pure-sh-bible#get-the-base-name-of-a-file-path).
+}
+
+function zsh_update_plugins() {
+  for repo in "$XDG_DATA_HOME/zsh/plugins"/*; do
+    if [[ -d "$repo/.git" ]]; then
+      printf "\e[1m\e[38;5;34m${repo##*/}\e[0m → \c"
+      git -C "$repo" pull
+      sleep 1
+    fi
+  done
+}

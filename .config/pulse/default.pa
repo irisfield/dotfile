@@ -1,0 +1,15 @@
+# Overrides the default settings in /etc/pulse/default.pa
+.include /etc/pulse/default.pa
+
+# To list available sinks:
+# pacmd list-sinks|egrep -i 'index:|name:'
+# The present default sink is marked with an asterisk.
+# The default default sink could also be changed with: pacmd set-default-sink {0|1}
+# Change the default sink
+set-default-sink 0
+
+# Disable muting media when entering a call (discord, etc)
+load-module module-role-cork
+
+# Apparently fixes static problems with mic.
+load-module module-udev-detect tsched=0

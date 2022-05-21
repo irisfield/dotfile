@@ -1,0 +1,80 @@
+#!/bin/zsh
+
+# Prompt configuration with git integration.
+# (https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#Configuration-1)
+# (https://github.com/zsh-users/zsh/blob/master/Misc/vcs_info-examples)
+# (https://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt)
+
+# git:
+# %b => current branch
+# %a => current action (merge, rebase, or bisect)
+# %c => current changed files
+# %u => current staged files
+
+# prompt:
+# %~ => current path
+# %* => time
+# %n => username
+# %m => shortname host
+# %1 => vcs branch and vcs
+# %2 => vcs dirty
+# %3 => vcs action
+# %4 => cmd execution time
+
+# 🌹 rose
+# 🥀 wilted_rolse
+# 💐 bouquet
+# 🌼 blossom
+# 💮 white_flower
+# 🌷 tulip
+# 🌺 hisbiscus
+# 🌻 sunflower
+# 🌸 sakura
+# 💠 diamond
+# ★ black star
+#  star_half_o f123
+# ☆ white star
+#  vintage
+
+# nerd icons
+#  mdi-git f7a1
+#  git_branch e725
+# 燎source_fork f9c0
+# שּׁ source_merge fb2c
+# ﳺ vanish
+
+_tail() {
+  print -P '%F{30}%B'
+}
+
+_head() {
+  print -P '%b%f'
+}
+
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' get-revision true
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr '✚'
+#zstyle ':vcs_info:*' unstagedstr '±'
+zstyle ':vcs_info:*' formats " $(_tail)%b$(_head)%u%c"
+zstyle ':vcs_info:*' actionformats " $(_tail)[%b|%a]$(_head)%u%c"
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+
+#zstyle ':vcs_info:*' headbehindstr '⇣'
+#zstyle ':vcs_info:*' headaheadstr '⇡'
+
++vi-git-untracked() {
+  if [[ "$(git status --porcelain 2>/dev/null)" == *"?? "* ]]; then
+    hook_com[unstaged]='±' # signify there unstaged files in repo
+  fi
+}
+
+setopt PROMPT_SUBST # enable substition in PROMPT
+autoload -Uz vcs_info
+
+# runs before every PROMPT
+precmd() {
+  vcs_info 2>/dev/null
+}
+
+PROMPT='🌸 %F{108}%B%2~%b%f$vcs_info_msg_0_ 🦋 '

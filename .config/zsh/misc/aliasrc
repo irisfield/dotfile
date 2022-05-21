@@ -1,0 +1,41 @@
+#!/bin/sh
+
+alias lf='lfcd'
+alias iv='sxiv -a'
+alias za='zathura'
+alias xsel='xsel -b'
+alias sudo='sudo -sE'
+alias vi='nvim' sovi='sudo nvim'
+alias yt='youtube-dl --add-metadata -i'
+alias cat='bat --paging=never --style="changes"'
+alias pasu='sudo pacman --color always' poof='paru -Rns'
+alias md2html='md2html --github --ftables --ftasklists'
+alias anki='QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox" anki' # fixes blank window
+alias zbarimg='zbarimg -q --raw'
+
+alias ...='../..'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias cp='cp -iv'
+alias mkd='mkdir -pv'
+alias less='less --ignore-case --tilde'
+
+alias diff='diff --color=auto'
+alias grep='grep --color=auto'
+alias dmesg='sudo dmesg | bat'
+alias ls='ls -Nh --color=auto --group-directories-first'
+
+alias df='df -h'
+alias ka='killall'
+alias lin='sudo shutdown -h now'
+alias res='sudo shutdown -r now'
+alias mimetype='file -b --mime-type'
+
+#alias gpg-check='gpg2 --keyserver-options auto-key-retrieve --verify' # verify signature key
+#alias gpg-retrieve='gpg2 --keyserver-options auto-key-retrieve --receive-keys' # receive the key of a developer
+
+alias zr="$EDITOR $XDG_CONFIG_HOME/zsh/zshrc"
+alias zs="$EDITOR $XDG_CONFIG_HOME/zsh/zshenv"
+alias zp="$EDITOR $XDG_CONFIG_HOME/zsh/zprofile"
+alias cw='cd ~/task/spring2022/'
+alias jn='cd ~/task/spring2022/notebook && jupyter notebook'

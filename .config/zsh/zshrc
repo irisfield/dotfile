@@ -1,0 +1,63 @@
+#!/bin/zsh
+
+# This file is intended to set options and other configurations for the z shell.
+# References:
+# (https://grml.org/zsh/zsh-lovers.html)
+# (https://thevaluable.dev/zsh-completion-guide-examples)
+# (https://github.com/ChristianChiarulli/Machfiles/tree/master/zsh/.config/zsh)
+
+# Preferred options. See zshoptions(1).
+setopt AUTO_CD EXTENDED_GLOB NOMATCH INTERACTIVE_COMMENTS INC_APPEND_HISTORY HIST_SAVE_NO_DUPS
+unsetopt BEEP
+
+stty stop undef              # disable ctrl-s to freeze terminal
+zle_highlight=('paste:none') # disable paste highlight
+
+# Initialize
+autoload -Uz compinit
+autoload -Uz colors; colors
+autoload -U up-line-or-beginning-search; zle -N up-line-or-beginning-search
+autoload -U down-line-or-beginning-search; zle -N down-line-or-beginning-search
+
+zmodload zsh/complist
+_comp_options+=(globdots)	# include hidden files
+
+# zsh system completion styles. See zshcompsys(1).
+zstyle ':completion:*' menu select
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:approximate:*' max-errors 1 numeric # _approximate corrects up to 1 error
+
+zstyle ':completion:*' use-cache on # speed up some command completions
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/cache"
+
+zstyle ':completion:*:functions' ignored-patterns '_*' # ignore completion functions for unavailable commands
+zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}" # uses $LS_COLORS for menu
+
+zstyle ':completion:*:*:*:*:descriptions' \
+    format '%F{033}✽ %d ✽%f'
+zstyle ':completion:*:warnings' \
+   format ' %F{162}✻ no matches found ✻%f'
+
+zstyle ':completion:*' group-name '' # group different type of matches under their descriptions
+zstyle ':completion:*:*:-command-:*:*' \
+    group-order alias builtins functions commands  # order for display of the groups defined
+zstyle ':completion:*' matcher-list \
+    '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'  # case insensitive and partial substring match completion
+#zstyle ':completion:*' squeeze-slashes true # expands /*/ ex. $HOME/.config/*/lua
+zstyle ':completion:*:messages' \
+   format ' %F{purple} -- %d --%f'
+
+compinit -d "$XDG_DATA_HOME/zsh/zcompdump" # speed up the running of compinit.
+
+# Source every file in every first level directory inside $ZDOTDIR in alphabetical order.
+for dir in "$ZDOTDIR"/*/; do
+    for file in "${dir%/}"/*; do
+        [[ -f "$file" ]] && source "$file" &>/dev/null
+    done
+done
+
+# Plugins must be sourced last
+zsh_add_plugin 'zsh-users/zsh-autosuggestions'
+zsh_add_plugin 'zsh-users/zsh-syntax-highlighting'
+# For more plugins: https://github.com/unixorn/awesome-zsh-plugins
+# More completions https://github.com/zsh-users/zsh-completions

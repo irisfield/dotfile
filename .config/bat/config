@@ -1,0 +1,25 @@
+# run "bat --list-themes" for a list of all available themes
+--theme="TwoDark"
+--force-colorization
+
+# auto - if it detects an interactive shell
+# plain - only show plain style, no decorations or colors
+# changes - shows git modifications
+# header - shows fully qualified filename (absolute path)
+# header-filename - shows the filename in the header
+# header-filesize - shows the filename in the header
+# grid - displays file content inside a frame/grid (conflicts with rule)
+# rule - displays file content the same as cat (conflicts with grid)
+# numbers - shows line numbering
+# snip -
+--style="changes,header-filesize,grid,snip"
+
+# specify text-wrapping mode
+--wrap=never
+
+# enable this to use italic text on the terminal
+--italic-text=always
+
+# syntax mappings: map a certain filename pattern to a language
+# i.e. use c++ syntax for Arduino .ino files
+#--map-syntax "*.ino:C++"
