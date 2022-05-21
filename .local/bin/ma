@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# ma will open any manual page in nvim.
+# nvim offers the advantage of displaying manual pages with colors and neater formatting.
+set -e
+
+man -w --no-subpages "$1" 1>/dev/null
+[ "$?" -eq 0 ] &&
+exec nvim -u $XDG_CONFIG_HOME/nvim/minit.lua -c "tab Man $1 | tabonly"

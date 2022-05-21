@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Batch rename files and directories by listing all the filenames in the current directory in nvim.
+# This was written for vim/nvim to take leverage its text editing magic for batch renaming. But it works with any text editor.
+
+# Original author: https://github.com/thameera/vimv
+# Dependencies: nvim, git, cat, echo, ls
+# USAGE: vv [file1 file2]
+
+# README
+# If you want to list only a group of files, you can pass them as an argument. eg: vv *.mp4
+# If you are inside a Git directory, vv will use git mv (instead of mv) to rename the files.
+# You can use /some/path/filename format to move the file elsewhere during renaming. If the path is non-existent, it will be automatically created before moving.
+# All the renamed files will be listed verbosely on the terminal. To remove this functionality comment line 51.
+
+set -eu
+
+VV_EDITOR="nvim -u $XDG_CONFIG_HOME/nvim/minit.lua"
+declare -r FILENAMES_FILE=$(mktemp "${TMPDIR:-/tmp}/vv.XXX")
+
+trap '{ rm -f "${FILENAMES_FILE}" ; }' EXIT
+
+if [ $# -ne 0 ]; then
+    src=( "$@" )
+else
+    IFS=$'\r\n' GLOBIGNORE='*' command eval 'src=($(ls --group-directories-first))'
+fi
+
+for ((i=0;i<${#src[@]};++i)); do
+    echo "${src[i]}" >> "${FILENAMES_FILE}"
+done
+
+$VV_EDITOR "${FILENAMES_FILE}"
+
+IFS=$'\r\n' GLOBIGNORE='*' command eval 'dest=($(cat "${FILENAMES_FILE}"))'
+
+if (( ${#src[@]} != ${#dest[@]} )); then
+    echo "ERROR: The number of filenames changed. Did you delete a line by accident? Please try again." >&2
+    exit 1
+fi
+
+declare -i count=0
+for ((i=0;i<${#src[@]};++i)); do
+    if [ "${src[i]}" != "${dest[i]}" ]; then
+        mkdir -p "$(dirname "${dest[i]}")"
+        if git ls-files --error-unmatch "${src[i]}" > /dev/null 2>&1; then
+            git mv -- "${src[i]}" "${dest[i]}"
+        else
+            mv -- "${src[i]}" "${dest[i]}"
+        fi
+        echo "${src[i]} -> ${dest[i]}" # list filename changes verbosely
+        ((++count))
+    fi
+done
+
+echo "$count" files renamed.

@@ -1,2 +1,2 @@
 # Config
-Backup of my `~/.config` directory.
+Backup of my `~/.config` and `~/.local/bin` directory.
