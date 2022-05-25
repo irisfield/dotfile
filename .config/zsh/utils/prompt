@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 # Prompt configuration with git integration.
 # (https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#Configuration-1)
@@ -54,18 +54,19 @@ _head() {
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' get-revision true
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' stagedstr '✚'
+zstyle ':vcs_info:*' stagedstr '+'
 #zstyle ':vcs_info:*' unstagedstr '±'
 zstyle ':vcs_info:*' formats " $(_tail)%b$(_head)%u%c"
 zstyle ':vcs_info:*' actionformats " $(_tail)[%b|%a]$(_head)%u%c"
-zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+zstyle ':vcs_info:git*+set-message:*' hooks git-unstaged
 
 #zstyle ':vcs_info:*' headbehindstr '⇣'
 #zstyle ':vcs_info:*' headaheadstr '⇡'
 
-+vi-git-untracked() {
-  if [[ "$(git status --porcelain 2>/dev/null)" == *"?? "* ]]; then
-    hook_com[unstaged]='±' # signify there unstaged files in repo
++vi-git-unstaged() {
+  _gstatus=$(git status --porcelain 2> /dev/null)
+  if [ "${_gstatus%% *}" = '??' ]; then
+    hook_com[unstaged]+='±' # unstaged files in repo
   fi
 }
 
