@@ -43,12 +43,22 @@
 # שּׁ source_merge fb2c
 # ﳺ vanish
 
+autoload -Uz vcs_info
+autoload -U colors && colors
+
+# hook that runs before every prompt
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+
+# enable substition in PROMPT
+setopt PROMPT_SUBST
+
 _tail() {
-  print -P '%F{30}%B'
+  # print -P '%F{30}%B'
 }
 
 _head() {
-  print -P '%b%f'
+  # print -P '%b%f'
 }
 
 zstyle ':vcs_info:*' enable git
@@ -56,8 +66,8 @@ zstyle ':vcs_info:*' get-revision true
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' stagedstr '+'
 #zstyle ':vcs_info:*' unstagedstr '±'
-zstyle ':vcs_info:*' formats " $(_tail)%b$(_head)%u%c"
-zstyle ':vcs_info:*' actionformats " $(_tail)[%b|%a]$(_head)%u%c"
+zstyle ':vcs_info:*' formats " %b%u%c"
+zstyle ':vcs_info:*' actionformats " [%b|%a]%u%c"
 zstyle ':vcs_info:git*+set-message:*' hooks git-unstaged
 
 #zstyle ':vcs_info:*' headbehindstr '⇣'
@@ -68,14 +78,6 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-unstaged
   if [ "${_gstatus%% *}" = '??' ]; then
     hook_com[unstaged]+='±' # unstaged files in repo
   fi
-}
-
-setopt PROMPT_SUBST # enable substition in PROMPT
-autoload -Uz vcs_info
-
-# runs before every PROMPT
-precmd() {
-  vcs_info 2>/dev/null
 }
 
 PROMPT='🌸 %F{108}%B%2~%b%f$vcs_info_msg_0_ 🦋 '

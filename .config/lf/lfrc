@@ -24,16 +24,11 @@ cmd open ${{
   esac
 }}
 
-cmd extract ${{
-
-}}
-
 # prompt to make a dir within lf
 cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
 
 # Bindings
 map g top
 map D delete
-map E extract
 map <c-s> set hidden!
 map <enter> shell
