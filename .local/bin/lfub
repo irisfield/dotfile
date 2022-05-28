@@ -7,8 +7,8 @@
 set -e
 
 _cleanup() {
-    exec 3>&-
-  rm "$FIFO_UEBERZUG"
+  exec 3>&-
+  rm -f "$FIFO_UEBERZUG"
 }
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then

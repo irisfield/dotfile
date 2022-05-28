@@ -5,5 +5,4 @@
 set -e
 
 man -w --no-subpages "$1" 1>/dev/null
-[ "$?" -eq 0 ] &&
-exec nvim -u $XDG_CONFIG_HOME/nvim/minit.lua -c "tab Man $1 | tabonly"
+[ "$?" -eq 0 ] && exec nvim -u $XDG_CONFIG_HOME/nvim/minit.lua -c "tab Man $1 | tabonly"
