@@ -42,3 +42,11 @@ endif
 --   autocmd BufEnter * match OverLength /\%108v.*/
 -- augroup END
 -- ]])
+
+-- Restore blinking beam cursor after exiting neovim.
+vim.cmd([[
+augroup RestoreCursorShapeOnExit
+    autocmd!
+    autocmd VimLeave * set guicursor=a:ver20-blinkwait175-blinkoff150-blinkon175
+augroup END
+]])

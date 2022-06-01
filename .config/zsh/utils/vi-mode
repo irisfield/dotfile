@@ -1,11 +1,12 @@
 #!/bin/zsh
 # See the 'ZLE BUILTINS' section of zshzle(1).
+# Run 'showkey -a' to examine the key codes sent by the keyboard.
 
 bindkey -v # enable vi-mode
 export KEYTIMEOUT=1 # speed up switching between vi modes
 
 # Edit the current line in nvim.
-VISUAL="nvim -u $XDG_CONFIG_HOME/nvim/minit.lua" # prioritized over $EDITOR
+VISUAL='nvim -u $XDG_CONFIG_HOME/nvim/minit.lua' # prioritized over $EDITOR
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line # edit line in vi with <ctrl-e>
 
@@ -14,14 +15,15 @@ bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
-#bindkey -M menuselect '^[[Z' vi-up-line-or-history
+# bindkey -M menuselect '^[[Z' vi-up-line-or-history
 
 # Detect switches between command (vicmd) and insert (viins or main) modes.
 function zle-keymap-select() {
   case $KEYMAP in
-    vicmd) printf '\e[1 q';; # use block for command mode
-    viins|main) printf '\e[5 q';; # use beam for insert mode
+    vicmd) printf '\e[1 q' ;; # use block for command mode
+    viins|main) printf '\e[5 q' ;; # use beam for insert mode
   esac
+
   # Allow characters to be deleted after switching modes.
   bindkey -v '^?' backward-delete-char
 }

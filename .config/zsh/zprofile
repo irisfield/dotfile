@@ -6,12 +6,14 @@
 [[ -f "$XDG_CONFIG_HOME/ls/ls_colors" ]] && source "$XDG_CONFIG_HOME/ls/ls_colors"
 
 # Source fzf completions and key bindings (ctrl-t, ctrl-r, alt-c).
-for comp in /usr/share/fzf/*.zsh; do
-    [[ -f "$comp" ]] && source "$comp"
-done
+if [[ -d '/usr/share/fzf' ]]; then
+  for comp in /usr/share/fzf/*.zsh; do
+      [[ -f "$comp" ]] && source "$comp"
+  done
+fi
 
 # allows lf to change directory on quit
-lfcd () {
+function lfcd () {
   tmp="$(mktemp)"
   lfub -last-dir-path="$tmp" "$@"
   if [ -f "$tmp" ]; then

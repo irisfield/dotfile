@@ -64,8 +64,8 @@ _head() {
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' get-revision true
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' stagedstr '+'
-#zstyle ':vcs_info:*' unstagedstr '±'
+zstyle ':vcs_info:*' stagedstr ':+' # new files were tracked
+zstyle ':vcs_info:*' unstagedstr ':-' # tracked files were modified or deleted
 zstyle ':vcs_info:*' formats " %b%u%c"
 zstyle ':vcs_info:*' actionformats " [%b|%a]%u%c"
 zstyle ':vcs_info:git*+set-message:*' hooks git-unstaged
@@ -76,7 +76,7 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-unstaged
 +vi-git-unstaged() {
   _gstatus=$(git status --porcelain 2> /dev/null)
   if [ "${_gstatus%% *}" = '??' ]; then
-    hook_com[unstaged]+='±' # unstaged files in repo
+    hook_com[unstaged]+=':±' # unstaged new files in repo
   fi
 }
 
