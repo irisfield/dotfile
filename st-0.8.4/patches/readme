@@ -1,0 +1,11 @@
+All patches in this dir have been applied.
+If any patch contains 'config.def.h' make sure to replace it with 'config.h'
+
+A drun run:
+  patch --dry-run -p1 < $file
+
+In order to patch run:
+  patch -p1 < $file
+
+Finally, compile st:
+sudo make install clean
